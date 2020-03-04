@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/metisMenu.css" />
+        <link rel="stylesheet" href="~/css/dataTables.bootstrap.css" />
+        <link rel="stylesheet" href="~/css/dataTables.responsive.css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+        <link href="~/css/sb-admin-2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/metisMenu.css" />
+        <link rel="stylesheet" href="~/css/dataTables.bootstrap.css" />
+        <link rel="stylesheet" href="~/css/dataTables.responsive.css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet" />
+        <link href="~/css/sb-admin-2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+</head>
+<body>
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container-fluid" style="padding: 0;   display: flex; flex-flow: column; height: 100%;">
+        @RenderBody()
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/metisMenu.js"></script>
+        <script src="~/js/jquery.dataTables.js"></script>
+        <script src="~/js/dataTables.bootstrap.js"></script>
+        <script src="~/js/dataTables.responsive.js"></script>
+
+        <script src="~/js/sb-admin-2.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    </environment>
+
+    <environment exclude="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/metisMenu.js"></script>
+        <script src="~/js/jquery.dataTables.js"></script>
+        <script src="~/js/dataTables.bootstrap.js"></script>
+        <script src="~/js/dataTables.responsive.js"></script>
+        <script src="~/js/sb-admin-2.min.js"></script>
+
+
+    </environment>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,48 @@
+﻿
+@{
+
+    ViewData["Title"] = "Login";
+}
+    <br /><br /><br /><br />
+    <div class="form-containter">
+        <div class="row" style="margin: 0px;">
+            <div class="col-md-4"></div>
+            <div class="col-md-4 card" style="padding: 10px;">
+                <h3 style="text-align: center">Vui lòng đăng nhập</h3>
+                <br />
+                <form action="/Nhanvien/login" method="post">
+                    <div class="form-group">
+                        <label for="loginUserInput">Tên đăng nhập:  </label>
+                        <input class="form-control" type="text" id="loginUserInput" name="username" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Mật khẩu:  </label>
+                        <input class="form-control" type="password" id="userPassword" name="password" required />
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="checkbox" id="showPassword" onclick="revealPassword()" />
+                        <label for="showPassword">Hiển thị mật khẩu</label>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" value="Đăng nhập" class="btn btn-default" style="text-align: center;" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+
+
+<script>
+    function revealPassword() {
+        var checkBox = document.getElementById("showPassword");
+        var passwordField = document.getElementById("userPassword");
+        if (checkBox.checked) {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    }
+</script>
+
+
