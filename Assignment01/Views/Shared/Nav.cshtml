@@ -1,0 +1,74 @@
+﻿
+@{
+    var thongTinNhanVien = ViewData["thongTinNhanVien"] as NhanVien;
+    ViewData["Title"] = "Thêm nhân viên";
+}
+
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> @thongTinNhanVien.Username <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li>
+                        <a href="/Nhanvien/@thongTinNhanVien.Id/doimatkhau"><i class="fas fa-cog"></i> Đổi mật khẩu</a>
+                    </li>
+                    <li>
+                        <a href="/Nhanvien/Logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav">
+                @{
+                    Html.RenderPartial("Notifications");
+                }
+                <div class="text-center">
+                    <h4>   Xin chào, @thongTinNhanVien.Username</h4>
+                </div>
+                <ul class="nav" id="side-menu">
+                    <li class="active">
+                        <a class="" href="/Nhanvien/index/@thongTinNhanVien.Id"><i class="fas fa-info-circle"></i> Xem thông tin cá nhân</a>
+                    </li>
+                    <li>
+                        <a href="/Nhanvien/@thongTinNhanVien.Id/Nvcungphong"><i class="fa fa-table fa-fw"></i> Danh sách nhân viên cùng phòng</a>
+                    </li>
+                    <!--HCNS-->
+                    @if (thongTinNhanVien.isHCNS == true)
+                    {
+                        <li>
+                            <a href="#"><i class="fas fa-id-card"></i> Quản lý thông tin nhân viên<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/Nhanvien/Them"><i class="fas fa-user-plus"></i> Thêm nhân viên</a>
+                                </li>
+                                <li>
+                                    <a href="/Nhanvien/Danhsach"><i class="fas fa-users"></i> Xem danh sách nhân viên</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fas fa-database"></i> Quản lý danh mục<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/DanhMuc/ChucVu"><i class="fas fa-briefcase"></i> Danh mục chức vụ</a>
+                                </li>
+                                <li>
+                                    <a href="/DanhMuc/PhongBan"><i class="fas fa-building"></i> Danh mục phòng ban</a>
+                                </li>
+                                <li>
+                                    <a href="/DanhMuc/TinhThanh"><i class="fas fa-city"></i> Danh mục tỉnh thành</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </nav>

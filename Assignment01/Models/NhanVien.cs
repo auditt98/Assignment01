@@ -28,6 +28,7 @@ namespace Assignment01.Models
         public string Tencv { get; set; }
         public string Tentinh { get; set; }
         public List<NhanVien> nhanVienCungPhong { get; set; }
+        public bool isHCNS { get; set; } //maybe use this to check if the person is in hcns
 
 
         public NhanVien()
@@ -47,12 +48,12 @@ namespace Assignment01.Models
                     connection.Open();
                     //var getNhanVienQuery = "select * from NhanVien where Idnv = @id";
                     var getNhanVienQuery =
-@"
-select Idnv, Hoten, Ns, Gt, NHANVIEN.Idtinh, Sdt, NHANVIEN.Idpban, Thamnien, Trangthai, NHANVIEN.Idcv, Username, Email, Ngayvaolam, Tentinh, Tencv, Tenpban from NHANVIEN
-    inner join CHUCVU on NHANVIEN.Idcv = CHUCVU.Idcv
-    inner join PHONGBAN on NHANVIEN.Idpban = PHONGBAN.Idpban
-    inner join TINHTHANH on NHANVIEN.Idtinh = TINHTHANH.Idtinh
-where Idnv = @id;";
+                    @"
+                    select Idnv, Hoten, Ns, Gt, NHANVIEN.Idtinh, Sdt, NHANVIEN.Idpban, Thamnien, Trangthai, NHANVIEN.Idcv, Username, Email, Ngayvaolam, Tentinh, Tencv, Tenpban from NHANVIEN
+                        inner join CHUCVU on NHANVIEN.Idcv = CHUCVU.Idcv
+                        inner join PHONGBAN on NHANVIEN.Idpban = PHONGBAN.Idpban
+                        inner join TINHTHANH on NHANVIEN.Idtinh = TINHTHANH.Idtinh
+                    where Idnv = @id;";
                     var sqlCommand = new SqlCommand(getNhanVienQuery, connection);
                     sqlCommand.Parameters.AddWithValue("@id", id);
                     var reader = sqlCommand.ExecuteReader();
@@ -78,6 +79,14 @@ where Idnv = @id;";
                             this.Tenpban = reader.GetValue(15).ToString();
                         }
                     }
+                    if(this.Tenpban.Contains("HCNS") || this.Tenpban.Contains("hcns"))
+                    {
+                        this.isHCNS = true;
+                    }
+                    else
+                    {
+                        this.isHCNS = false;
+                    }
                     reader.Close();
                 }
                 catch(Exception)
@@ -97,9 +106,10 @@ where Idnv = @id;";
                 {
                     List<NhanVien> nv = new List<NhanVien>();
                     connection.Open();
-                    var getNhanVienCungPhongQuery = @"select Idnv from NHANVIEN where Idpban = @idpban";
+                    var getNhanVienCungPhongQuery = @"select Idnv from NHANVIEN where Idpban = @idpban and Idnv <> @idnv";
                     var sqlCommand = new SqlCommand(getNhanVienCungPhongQuery, connection);
                     sqlCommand.Parameters.AddWithValue("@idpban", this.Idpban);
+                    sqlCommand.Parameters.AddWithValue("@idnv", this.Id);
                     var reader = sqlCommand.ExecuteReader();
                     if (reader.HasRows)
                     {
@@ -119,7 +129,6 @@ where Idnv = @id;";
                 }
             }
         }
-        
         
 
     }

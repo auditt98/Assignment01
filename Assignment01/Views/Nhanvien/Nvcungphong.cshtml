@@ -9,26 +9,9 @@
 
 </script>
 
-<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-    @{
-        Html.RenderPartial("PartialNavBar");
-    }
-    <div class="navbar-default sidebar" role="navigation">
-        <div class="sidebar-nav">
-            <div class="text-center">
-                <h4>   Xin chào, @thongTinNhanVien.Username</h4>
-            </div>
-            <ul class="nav" id="side-menu">
-                <li>
-                    <a class="" href="/Nhanvien/Index/@thongTinNhanVien.Id"><i class="fas fa-info-circle"></i> Xem thông tin cá nhân</a>
-                </li>
-                <li>
-                    <a href="/Nhanvien/@thongTinNhanVien.Id/Nvcungphong" class="active"><i class="fa fa-table fa-fw"></i> Danh sách nhân viên cùng phòng</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+@{ 
+    Html.RenderPartial("Nav");
+}
 
 <div id="page-wrapper">
     <div class="row">
@@ -62,7 +45,7 @@
                                         <td>@nv.Gt</td>
                                         <td>@nv.Tenpban</td>
                                         <td>@nv.Tencv</td>
-                                        <td><a class="btn btn-default" href="/Nhanvien/@thongTinNhanVien.Id/Nvcungphong/@nv.Id">Xem chi tiết</a></td>
+                                        <td><a class="btn btn-default" href="/Nhanvien/ChiTiet/@nv.Id">Xem chi tiết</a></td>
                                     </tr>
                                 }
                             }
