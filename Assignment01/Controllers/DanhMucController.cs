@@ -21,6 +21,56 @@ namespace Assignment01.Controllers
         }
 
         //GET /DanhMuc/TinhThanh/Index
+        [Route("/DanhMuc/TinhThanh/")]
+        public ActionResult TinhThanhIndex()
+        {
+            var nhanVienId = HttpContext.Session.GetString("nhanVienId");
+            if (nhanVienId != null)
+            {
+                var nhanVien = new NhanVien(nhanVienId);
+                if (nhanVien.isHCNS == true)
+                {
+                    ViewData["thongTinNhanVien"] = nhanVien;
+                    var tinhThanhList = new List<TinhThanh>();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllTinhThanhQuery = "select Idtinh, Tentinh from TINHTHANH;";
+                            var sqlCommand = new SqlCommand(getAllTinhThanhQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var tt = new TinhThanh(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    tinhThanhList.Add(tt);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucTinhThanh"] = tinhThanhList;
+                    return View("~/Views/DanhMuc/TinhThanh/Index.cshtml");
+
+                }
+                else
+                {
+                    TempData["Error"] = "Bạn không có quyền xem trang này.";
+                    return RedirectToAction("Index", "Nhanvien", new { id = nhanVienId });
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Vui lòng đăng nhập.";
+                return RedirectToAction("Index", "Login");
+            }
+        }
 
 
         //GET /DanhMuc/TinhThanh/Them
@@ -63,8 +113,8 @@ namespace Assignment01.Controllers
                             throw;
                         }
                     }
-                    ViewData["DanhSachChucVu"] = chucVuList;
-                    return View("~/Views/DanhMuc/ChucVu/ChucVuIndex.cshtml");
+                    ViewData["DanhMucChucVu"] = chucVuList;
+                    return View("~/Views/DanhMuc/ChucVu/Index.cshtml");
 
                 }
                 else
@@ -85,6 +135,57 @@ namespace Assignment01.Controllers
         //GET /DanhMuc/ChucVu/Xoa
 
         //GET /DanhMuc/Phongban/Index
+        [Route("/DanhMuc/PhongBan/")]
+        public ActionResult PhongBanIndex()
+        {
+            var nhanVienId = HttpContext.Session.GetString("nhanVienId");
+            if (nhanVienId != null)
+            {
+                var nhanVien = new NhanVien(nhanVienId);
+                if (nhanVien.isHCNS == true)
+                {
+                    ViewData["thongTinNhanVien"] = nhanVien;
+                    var phongBanList = new List<PhongBan>();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllPhongBanQuery = "select Idpban, Tenpban from PHONGBAN;";
+                            var sqlCommand = new SqlCommand(getAllPhongBanQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var pb = new PhongBan(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    phongBanList.Add(pb);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucPhongBan"] = phongBanList;
+                    return View("~/Views/DanhMuc/PhongBan/Index.cshtml");
+
+                }
+                else
+                {
+                    TempData["Error"] = "Bạn không có quyền xem trang này.";
+                    return RedirectToAction("Index", "Nhanvien", new { id = nhanVienId });
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Vui lòng đăng nhập.";
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
         //GET /DanhMuc/Phongban/Them
         //GET /DanhMuc/Phongban/Sua
         //GET /DanhMuc/Phongban/Xoa

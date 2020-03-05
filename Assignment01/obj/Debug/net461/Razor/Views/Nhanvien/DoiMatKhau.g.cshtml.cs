@@ -74,7 +74,7 @@ using Assignment01.Models;
             WriteLiteral("\r\n<div id=\"page-wrapper\">\r\n    <div class=\"row\">\r\n        <div class=\"col-lg-12\">\r\n            <h1 class=\"page-header\">Đổi mật khẩu</h1>\r\n        </div>\r\n    </div>\r\n    ");
             EndContext();
             BeginContext(334, 2140, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "610e303aebd24695a4176410e343f11b", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8412df072cb14720836bf40040953870", async() => {
                 BeginContext(405, 2062, true);
                 WriteLiteral(@"
         <div class=""row"" style=""margin-top: 30px;"">

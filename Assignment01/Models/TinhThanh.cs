@@ -11,5 +11,10 @@ namespace Assignment01.Models
     {
         public int Idtinh { get; set; }
         public string Tentinh { get; set; }
+        public TinhThanh(int id, string ten)
+        {
+            this.Idtinh = id;
+            this.Tentinh = ten;
+        }
     }
 }

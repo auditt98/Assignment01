@@ -12,6 +12,10 @@ namespace Assignment01.Models
     {
         public int Idpban { get; set; }
         public string Tenpban { get; set; }
-
+        public PhongBan(int id, string ten)
+        {
+            this.Idpban = id;
+            this.Tenpban = ten;
+        }
     }
 }

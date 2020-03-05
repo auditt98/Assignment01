@@ -1,14 +1,9 @@
 ﻿
 @{
     var thongTinNhanVien = ViewData["thongTinNhanVien"] as NhanVien;
-    var danhSachChucVu = ViewData["DanhSachChucVu"] as List<ChucVu>;
-    ViewData["Title"] = "Nhân viên cùng phòng";
+    var danhMucChucVu = ViewData["DanhMucChucVu"] as List<ChucVu>;
+    ViewData["Title"] = "Danh mục chức vụ";
 }
-<script>
-
-
-
-</script>
 
 @{
     Html.RenderPartial("Nav");
@@ -34,7 +29,7 @@
                         </thead>
                         <tbody>
                             @{
-                                foreach (var cv in danhSachChucVu)
+                                foreach (var cv in danhMucChucVu)
                                 {
                                     <tr>
                                         <td>@cv.Idcv</td>

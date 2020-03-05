@@ -373,4 +373,6 @@ E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\PhongBan
 E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\ChucVu\Them.g.cshtml.cs
 E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\ChucVu\Sua.g.cshtml.cs
 E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\ChucVu\Xoa.g.cshtml.cs
-E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\ChucVu\ChucVuIndex.g.cshtml.cs
+E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\ChucVu\Index.g.cshtml.cs
+E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\PhongBan\Index.g.cshtml.cs
+E:\Repos\Assignment01\Assignment01\obj\Debug\net461\Razor\Views\DanhMuc\TinhThanh\Index.g.cshtml.cs
