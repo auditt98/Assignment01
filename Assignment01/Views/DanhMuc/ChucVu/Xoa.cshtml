@@ -1,6 +1,41 @@
 ﻿
 @{
-
+    var thongTinNhanVien = ViewData["thongTinNhanVien"] as NhanVien;
+    var thongTinChucVu = ViewData["thongTinChucVu"] as ChucVu;
+    ViewData["Title"] = "Xóa chức vụ";
 }
 
+@{
+    Html.RenderPartial("Nav");
+}
 
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Bạn muốn xóa chức vụ này</h1>
+        </div>
+    </div>
+    <form class="form-horizontal" method="post" action="/DanhMuc/ChucVu/@thongTinChucVu.Idcv/Xoa">
+        <div class="form-group">
+            <label for="inputId" class="col-sm-2 control-label">Mã chức vụ:</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="inputId" value="@thongTinChucVu.Idcv.ToString()" disabled />
+                <input type="hidden" name="deleteCvId" value="@thongTinChucVu.Idcv.ToString()"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputName" class="col-sm-2 control-label">Tên chức vụ <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputName" value="@thongTinChucVu.Tencv" disabled>
+                <input type="hidden" name="deleteCvName" value="@thongTinChucVu.Tencv">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8" style="text-align: center;">
+                <button class="btn btn-danger" type="submit">Xóa</button>
+                <a class="btn btn-info" href="/DanhMuc/ChucVu">Hủy</a>
+            </div>
+        </div>
+    </form>
+
+</div>

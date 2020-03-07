@@ -70,7 +70,7 @@
         var newPasswordRepeat = document.getElementById("repeatPasswordInput");
         var help = document.getElementById("helpBlock");
         if (newPasswordInput.value != newPasswordRepeat.value) {
-            help.innerText = "Mật khẩu mới phải khớp với mật khẩu nhập lại.";
+            help.innerText = "Mật khẩu nhập lại không trùng khớp.";
             newPasswordInput.style = "border: 1px solid red";
             newPasswordRepeat.style = "border: 1px solid red";
         } else {
@@ -78,7 +78,6 @@
             newPasswordRepeat.style = "border: 1px solid green";
             help.innerText = ""
         }
-
     }
 
 </script>

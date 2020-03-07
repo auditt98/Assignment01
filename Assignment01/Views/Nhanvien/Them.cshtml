@@ -1,6 +1,10 @@
 ﻿
 @{
     var thongTinNhanVien = ViewData["thongTinNhanVien"] as NhanVien;
+    var danhMucTinhThanh = ViewData["DanhMucTinhThanh"] as List<TinhThanh>;
+    var danhMucPhongBan = ViewData["DanhMucPhongBan"] as List<PhongBan>;
+    var danhMucChucVu = ViewData["DanhMucChucVu"] as List<ChucVu>;
+
     ViewData["Title"] = "Thêm nhân viên";
 
 }
@@ -18,78 +22,101 @@
             </div>
         </div>
         <form class="form-horizontal" method="post" action="/Nhanvien/Them">
+            @*Name*@
             <div class="form-group">
-                <label for="inputName" class="col-sm-2 control-label">Họ tên (*):</label>
+                <label for="inputN" class="col-sm-2 control-label">Họ tên <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputName" placeholder="Nhập tên nhân viên" required>
+                    <input type="text" name="inputName" class="form-control" id="inputN" placeholder="Nhập tên nhân viên" pattern="^([a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+\s[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+)+$" title="Nhập đầy đủ họ tên" required>
                 </div>
             </div>
+            @*Birthday*@
             <div class="form-group">
-                <label for="inputBirthday" class="col-sm-2 control-label">Ngày sinh:</label>
+                <label for="birthday" class="col-sm-2 control-label">Ngày sinh:</label>
                 <div class="col-sm-6">
-                    <input type="date" value="2000/02/05" class="form-control" id="inputBirthday" placeholder="Nhập ngày sinh" required>
+                    <input type="date" value="2000/02/05" class="form-control" id="birthday" name="inputBirthday" placeholder="Nhập ngày sinh" required>
                 </div>
             </div>
+            @*gender*@
             <div class="form-group">
-                <label for="inputGender" class="col-sm-2 control-label">Giới tính:</label>
+                <label for="gender" class="col-sm-2 control-label">Giới tính:</label>
                 <div class="col-sm-6">
-                    <select id="inputGender" required>
-                        <option value="nam" selected>Nam</option>
-                        <option value="nu">Nữ</option>
+                    <select class="form-control" id="gender" name="inputGender" required>
+                        <option value="Nam" selected>Nam</option>
+                        <option value="Nữ">Nữ</option>
                     </select>
                 </div>
             </div>
+            @*tinhthanh*@
             <div class="form-group">
-                <label for="inputGender" class="col-sm-2 control-label">Quê quán (*):</label>
+                <label for="inputTt" class="col-sm-2 control-label">Quê quán <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <select id="inputGender" required>
-                        <option value="nam" selected>Nam</option>
-                        <option value="nu">Nữ</option>
+                    <select class="form-control" name="inputTinhThanh" id="inputTt" required>
+                        @{
+                            foreach (var tt in danhMucTinhThanh)
+                            {
+                                <option value="@tt.Idtinh">@tt.Tentinh</option>
+                            }
+                        }
                     </select>
                 </div>
             </div>
+            @*email*@
             <div class="form-group">
-                <label for="inputEmail" class="col-sm-2 control-label">Email (*):</label>
+                <label for="email" class="col-sm-2 control-label">Email <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Nhập địa chỉ email" required>
+                    <input type="email" name="inputEmail" class="form-control" id="email" placeholder="Nhập địa chỉ email" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="inputPhone" class="col-sm-2 control-label">Số điện thoại (*):</label>
+                <label for="phone" class="col-sm-2 control-label">Số điện thoại <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" minlength="10" maxlength="13" pattern="^[0-9]*$" id="inputPhone" placeholder="Nhập số điện thoại" required title="Độ dài số điện thoại phải từ 10-13 số, không có chữ cái hoặc ký tự đặc biệt.">
+                    <input name="inputPhone" id="phone" type="text" class="form-control" minlength="10" maxlength="13" pattern="^[0-9]*$" placeholder="Nhập số điện thoại" required title="Số điện thoại nhập không đúng. Độ dài số điện thoại phải từ 10-13 số, không có chữ cái hoặc ký tự đặc biệt.">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="inputPhongban" class="col-sm-2 control-label">Phòng ban (*):</label>
+                <label for="inputPb" class="col-sm-2 control-label">Phòng ban <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <select id="inputPhongban" required>
-                        <option value="nam" selected>Nam</option>
-                        <option value="nu">Nữ</option>
+                    <select class="form-control" name="inputPhongBan" id="inputPb" required>
+                        @{
+                            foreach (var pb in danhMucPhongBan)
+                            {
+                                <option value="@pb.Idpban">@pb.Tenpban</option>
+                            }
+                        }
                     </select>
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputChucvu" class="col-sm-2 control-label">Chức vụ (*):</label>
+                <label for="inputChucvu" class="col-sm-2 control-label">Chức vụ <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <select id="inputChucvu" required>
-                        <option value="nam" selected>Nam</option>
-                        <option value="nu">Nữ</option>
+                    <select class="form-control" name="inputChucVu" id="inputCv" required>
+                        @{
+                            foreach (var cv in danhMucChucVu)
+                            {
+                                <option value="@cv.Idcv">@cv.Tencv</option>
+                            }
+                        }
                     </select>
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputStartDate" class="col-sm-2 control-label">Ngày vào làm (*):</label>
+                <label for="startDate" class="col-sm-2 control-label">Ngày vào làm <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <input type="date" class="form-control" id="inputStartDate" placeholder="Nhập ngày vào làm" required>
+                    <input type="date" class="form-control" id="startDate" name="inputStartDate" placeholder="Nhập ngày vào làm" required>
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputUsername" class="col-sm-2 control-label">Tên đăng nhập (*):</label>
+                <label for="username" class="col-sm-2 control-label">Tên đăng nhập <span style="color:red">(*)</span>:</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputUsername" placeholder="Nhập tên đăng nhập" required>
+                    <input type="text" class="form-control" id="username" name="inputUsername" placeholder="Nhập tên đăng nhập" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id" class="col-sm-2 control-label">Mã nhân viên <span style="color:red">(*)</span>:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="id" name="inputId" placeholder="Nhập mã nhân viên" required>
                 </div>
             </div>
             <div class="row" style="margin-top: 20px;">

@@ -97,23 +97,30 @@ namespace Assignment01.Controllers
                             var result = Convert.ToInt32(sqlCommand.ExecuteScalar());
                             if(result == 0)
                             {
-                                TempData["Error"] = "Mật khẩu cũ không chính xác, vui lòng nhập lại.";
+                                TempData["Error"] = "Mật khẩu cũ không chính xác.";
                                 return RedirectToAction("Doimatkhau", "Nhanvien", new { id = nhanVienId });
                             }
                             else
                             {
-                                //change the password, is it better if i just do [where Idnv = @id and pass = @password] then read
-                                // the return value instead of checking if the old password is correct?
-                                var changePasswordQuery = "update NHANVIEN set Pass = @newPass where Idnv = @id";
-                                var changePasswordCommand = new SqlCommand(changePasswordQuery, connection);
-                                changePasswordCommand.Parameters.AddWithValue("@id", nhanVienId);
-                                changePasswordCommand.Parameters.AddWithValue("@newPass", newPassword);
-                                var a = changePasswordCommand.ExecuteNonQuery();
-                                Console.WriteLine(a);
-                                changePasswordCommand.Dispose();
-                                HttpContext.Session.Remove("nhanVienId");
-                                TempData["Success"] = "Đã đổi mật khẩu thành công, vui lòng đăng nhập lại";
-                                return RedirectToAction("Index", "Login");
+                                if (oldPassword == newPassword)
+                                {
+                                    TempData["Error"] = "Mật khẩu mới trùng với mật khẩu cũ.";
+                                    return RedirectToAction("Doimatkhau", "Nhanvien", new { id = nhanVienId });
+                                }
+                                else
+                                {
+                                    var changePasswordQuery = "update NHANVIEN set Pass = @newPass where Idnv = @id";
+                                    var changePasswordCommand = new SqlCommand(changePasswordQuery, connection);
+                                    changePasswordCommand.Parameters.AddWithValue("@id", nhanVienId);
+                                    changePasswordCommand.Parameters.AddWithValue("@newPass", newPassword);
+                                    var a = changePasswordCommand.ExecuteNonQuery();
+                                    Console.WriteLine(a);
+                                    changePasswordCommand.Dispose();
+                                    HttpContext.Session.Remove("nhanVienId");
+                                    TempData["Success"] = "Đổi mật khẩu thành công.";
+                                    return RedirectToAction("Index", "Login");
+                                }
+
                             }
                         }
                         catch (Exception)
@@ -173,6 +180,86 @@ namespace Assignment01.Controllers
                 if (nv.isHCNS)
                 {
                     ViewData["thongTinNhanVien"] = nv;
+                    //get the list of TinhThanh
+                    var tinhThanhList = new List<TinhThanh>();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllTinhThanhQuery = "select Idtinh, Tentinh from TINHTHANH;";
+                            var sqlCommand = new SqlCommand(getAllTinhThanhQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var tt = new TinhThanh(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    tinhThanhList.Add(tt);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucTinhThanh"] = tinhThanhList;
+
+                    //get the list of PhongBan
+                    var phongBanList = new List<PhongBan>();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllPhongBanQuery = "select Idpban, Tenpban from PHONGBAN;";
+                            var sqlCommand = new SqlCommand(getAllPhongBanQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var pb = new PhongBan(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    phongBanList.Add(pb);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucPhongBan"] = phongBanList;
+                    //get the list of ChucVu
+
+                    var chucVuList = new List<ChucVu>();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllChucVuQuery = "select Idcv, Tencv from CHUCVU;";
+                            var sqlCommand = new SqlCommand(getAllChucVuQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var cv = new ChucVu(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    chucVuList.Add(cv);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucChucVu"] = chucVuList;
                     return View();
                 }
                 else
@@ -193,8 +280,103 @@ namespace Assignment01.Controllers
         [HttpPost]
         public ActionResult Them(IFormCollection form)
         {
-            //Console.WriteLine()
-            return Content("");
+            var nhanVienId = HttpContext.Session.GetString("nhanVienId");
+            if (nhanVienId != null)
+            {
+                var nv = new NhanVien(nhanVienId);
+                if (nv.isHCNS)
+                {
+                    ViewData["thongTinNhanVien"] = nv;
+                    var name = form["inputName"].ToString();
+                    var birthday = Convert.ToDateTime(form["inputBirthday"]);
+                    var gender = form["inputGender"].ToString();
+                    var tinhThanh = Convert.ToInt32(form["inputTinhThanh"]);
+                    var email = form["inputEmail"].ToString();
+                    var phone = form["inputPhone"].ToString();
+                    var phongBanId = Convert.ToInt32(form["inputPhongBan"]);
+                    var chucVuId = Convert.ToInt32(form["inputChucVu"]);
+                    var startDate = Convert.ToDateTime(form["inputStartDate"]);
+                    var username = form["inputUsername"].ToString();
+                    var userId = form["inputId"].ToString();
+
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var checkNhanVienIdExistQuery = @"select COUNT(*) from NHANVIEN where Idnv = @userId";
+                            var sqlCommand0 = new SqlCommand(checkNhanVienIdExistQuery, connection);
+                            sqlCommand0.Parameters.AddWithValue("userId", userId);
+                            int countNhanVienIdExist = Convert.ToInt32(sqlCommand0.ExecuteScalar());
+
+                            var checkUsernameExistQuery = @"select count(*) from NHANVIEN where Username = @username";
+                            var sqlCommand1 = new SqlCommand(checkUsernameExistQuery, connection);
+                            sqlCommand1.Parameters.AddWithValue("username", username);
+                            int countUsernameExist = Convert.ToInt32(sqlCommand1.ExecuteScalar());
+
+                            if (countNhanVienIdExist != 0)
+                            {
+                                TempData["Error"] = "Mã nhân viên bị lặp, vui lòng nhập lại.";
+                                return RedirectToAction("Them", "NhanVien");
+                            }
+                            else if (countUsernameExist != 0)
+                            {
+                                TempData["Error"] = "Username bị lặp, vui lòng nhập lại.";
+                                return RedirectToAction("Them", "NhanVien");
+                            }
+                            else
+                            {
+                                var insertNhanVienQuery =
+                                    @"
+                                insert into NHANVIEN
+                                values (@id, @hoTen, @ns, @gt, @idTinh, @sdt, @idPban, 0, N'Đang làm', @idCv, @username, '', @email, @ngayVaoLam);
+                            ";
+                                var sqlCommand3 = new SqlCommand(insertNhanVienQuery, connection);
+                                sqlCommand3.Parameters.AddWithValue("@id", userId);
+                                sqlCommand3.Parameters.AddWithValue("@hoTen", name);
+                                sqlCommand3.Parameters.AddWithValue("@ns", birthday);
+                                sqlCommand3.Parameters.AddWithValue("@gt", gender);
+                                sqlCommand3.Parameters.AddWithValue("@idTinh", tinhThanh);
+                                sqlCommand3.Parameters.AddWithValue("@sdt", phone);
+                                sqlCommand3.Parameters.AddWithValue("@idPban", phongBanId);
+                                sqlCommand3.Parameters.AddWithValue("@idCv", chucVuId);
+                                sqlCommand3.Parameters.AddWithValue("@username", username);
+                                sqlCommand3.Parameters.AddWithValue("@email", email);
+                                sqlCommand3.Parameters.AddWithValue("@ngayVaoLam", startDate);
+                                var result = sqlCommand3.ExecuteNonQuery();
+                                if (result == 0)
+                                {
+                                    TempData["Error"] = "Có lỗi xảy ra, vui lòng thử lại.";
+                                    return RedirectToAction("Them", "NhanVien");
+                                }
+                                else
+                                {
+                                    TempData["Success"] = "Thêm nhân viên thành công.";
+                                    var thongTinNhanVienChiTiet = new NhanVien(userId);
+                                    ViewData["thongTinNhanVienChiTiet"] = thongTinNhanVienChiTiet;
+                                    return View("~/Views/NhanVien/AddValidation.cshtml");
+
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Bạn không có quyền xem trang này";
+                    return RedirectToAction("Index", "Nhanvien", new { id = nhanVienId });
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         //GET: /Nhanvien/DanhSach
@@ -296,6 +478,272 @@ namespace Assignment01.Controllers
             return RedirectToAction("Index", "Login");
         }
 
+        //GET: /NhanVien/Sua/{id}
+        public ActionResult Sua(string id)
+        {
+            var nhanVienId = HttpContext.Session.GetString("nhanVienId");
+            if (nhanVienId != null)
+            {
+                var nv = new NhanVien(nhanVienId);
+                if (nv.isHCNS)
+                {
+                    ViewData["thongTinNhanVien"] = nv;
+                    //get list of TinhThanh
+                    var tinhThanhList = new List<TinhThanh>();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllTinhThanhQuery = "select Idtinh, Tentinh from TINHTHANH;";
+                            var sqlCommand = new SqlCommand(getAllTinhThanhQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var tt = new TinhThanh(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    tinhThanhList.Add(tt);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucTinhThanh"] = tinhThanhList;
+                    //get list of PhongBan
+                    var phongBanList = new List<PhongBan>();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllPhongBanQuery = "select Idpban, Tenpban from PHONGBAN;";
+                            var sqlCommand = new SqlCommand(getAllPhongBanQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var pb = new PhongBan(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    phongBanList.Add(pb);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucPhongBan"] = phongBanList;
+                    //get list of ChucVu
+                    var chucVuList = new List<ChucVu>();
+
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var getAllChucVuQuery = "select Idcv, Tencv from CHUCVU;";
+                            var sqlCommand = new SqlCommand(getAllChucVuQuery, connection);
+                            var reader = sqlCommand.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var cv = new ChucVu(Convert.ToInt32(reader.GetValue(0)), reader.GetValue(1).ToString());
+                                    chucVuList.Add(cv);
+                                }
+                            }
+                            sqlCommand.Dispose();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                    ViewData["DanhMucChucVu"] = chucVuList;
+
+                    var nvct = new NhanVien(id);
+                    ViewData["thongTinNhanVienChiTiet"] = nvct;
+
+                    return View();
+                }
+                else
+                {
+                    TempData["Error"] = "Bạn không có quyền xem trang này";
+                    return RedirectToAction("Index", "Nhanvien", new { id = nhanVienId });
+
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Login");
+            }
+        }
+        
+        //POST: /Nhanvien/Sua/{id}
+        [HttpPost]
+        public ActionResult Sua(string id, IFormCollection form)
+        {
+            var nhanVienId = HttpContext.Session.GetString("nhanVienId");
+
+            if (nhanVienId != null)
+            {
+                var nv = new NhanVien(nhanVienId);
+                
+                if (nv.isHCNS == true)
+                {
+                    var name = form["inputName"].ToString();
+                    var birthday = Convert.ToDateTime(form["inputBirthday"]);
+                    var gender = form["inputGender"].ToString();
+                    var tinhThanh = Convert.ToInt32(form["inputTinhThanh"]);
+                    var email = form["inputEmail"].ToString();
+                    var phone = form["inputPhone"].ToString();
+                    var phongBanId = Convert.ToInt32(form["inputPhongBan"]);
+                    var chucVuId = Convert.ToInt32(form["inputChucVu"]);
+                    var startDate = Convert.ToDateTime(form["inputStartDate"]);
+                    var username = form["inputUsername"].ToString();
+                    var status = form["inputStatus"].ToString();
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            var updateNhanVienQuery =
+                                @"update NHANVIEN set 
+                                    Hoten = @hoten,
+                                    Ns = @ns,
+                                    Gt = @gt,
+                                    Idtinh = @tinh,
+                                    Sdt = @sdt,
+                                    Idpban = @pban,
+                                    Idcv = @cv,
+                                    Username = @username,
+                                    Email = @email,
+                                    Ngayvaolam = @ngayVaoLam,
+                                    Trangthai = @status
+                                where Idnv = @id;";
+                            var sqlCommand = new SqlCommand(updateNhanVienQuery, connection);
+                            sqlCommand.Parameters.AddWithValue("@hoten", name);
+                            sqlCommand.Parameters.AddWithValue("@ns", birthday);
+                            sqlCommand.Parameters.AddWithValue("@gt", gender);
+                            sqlCommand.Parameters.AddWithValue("@tinh", tinhThanh);
+                            sqlCommand.Parameters.AddWithValue("@sdt", phone);
+                            sqlCommand.Parameters.AddWithValue("@pban", phongBanId);
+                            sqlCommand.Parameters.AddWithValue("@cv", chucVuId);
+                            sqlCommand.Parameters.AddWithValue("@username", username);
+                            sqlCommand.Parameters.AddWithValue("@email", email);
+                            sqlCommand.Parameters.AddWithValue("@ngayVaoLam", startDate);
+                            sqlCommand.Parameters.AddWithValue("@id", id);
+                            sqlCommand.Parameters.AddWithValue("@status", status);
+                            var result = sqlCommand.ExecuteNonQuery();
+                            TempData["Success"] = "Sửa nhân viên thành công.";
+                            return RedirectToAction("Danhsach", "Nhanvien");
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Bạn không có quyền xem trang này.";
+                    return RedirectToAction("Index", "Nhanvien", new { id = nhanVienId });
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
+        //GET: /Nhanvien/Xoa/{id}
+        public ActionResult Xoa(string id)
+        {
+            var nhanVienId = HttpContext.Session.GetString("nhanVienId");
+
+            if (nhanVienId != null)
+            {
+                var nv = new NhanVien(nhanVienId);
+                if (nv.isHCNS)
+                {
+                    var nvct = new NhanVien(id);
+                    ViewData["thongTinNhanVien"] = nv;
+                    ViewData["thongTinNhanVienChiTiet"] = nvct;
+                    return View();
+                }
+                else
+                {
+                    TempData["Error"] = "Bạn không có quyền xem trang này";
+                    return RedirectToAction("Index", "Nhanvien", new { id = nhanVienId });
+
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Login");
+            }
+        }
+        
+        //POST: /Nhanvien/Xoa/{id}
+        [HttpPost]
+        public ActionResult Xoa(string id, IFormCollection form)
+        {
+            var nhanVienId = HttpContext.Session.GetString("nhanVienId");
+            if (nhanVienId != null)
+            {
+                var nhanVien = new NhanVien(nhanVienId);
+                var nvChiTiet = new NhanVien(id);
+                if (nhanVien.isHCNS == true)
+                {
+                    if(nvChiTiet.Trangthai == "Đang làm")
+                    {
+                        TempData["Error"] = "Không xóa được vì nhân viên đang làm việc";
+                        return RedirectToAction("Danhsach", "Nhanvien");
+                    }
+                    else
+                    {
+                        using(var connection = new SqlConnection(connectionString))
+                        {
+                            try
+                            {
+                                connection.Open();
+                                var deleteNhanVienQuery = @"delete from NHANVIEN where Idnv = @id";
+                                var sqlCommand = new SqlCommand(deleteNhanVienQuery, connection);
+                                sqlCommand.Parameters.AddWithValue("@id", id);
+                                sqlCommand.ExecuteNonQuery();
+                                TempData["Success"] = "Xóa thành công";
+                                return RedirectToAction("Danhsach", "NhanVien");
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Bạn không có quyền xem trang này.";
+                    return RedirectToAction("Index", "Nhanvien", new { id = nhanVienId });
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Vui lòng đăng nhập";
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
         //POST: /Nhanvien/Login
         [HttpPost]
         public ActionResult Login(IFormCollection form)
@@ -314,7 +762,7 @@ namespace Assignment01.Controllers
                     var result = Convert.ToInt32(sqlCommand.ExecuteScalar());
                     if (result == 0)
                     {
-                        TempData["Error"] = "Sai tên tài khoản hoặc mật khẩu, vui lòng kiểm tra lại.";
+                        TempData["Error"] = "Tên đăng nhập hoặc mật khẩu không chính xác.";
                         return RedirectToAction("Index", "Login");
                     }
                     else
@@ -348,44 +796,5 @@ namespace Assignment01.Controllers
 
             return Content("");
         }
-
-
-
-
-
-        //public bool isLoggedIn(string id, int isSamePerson)
-        //{
-        //    string nhanVienId = HttpContext.Session.GetString("nhanVienId");
-        //    if (isSamePerson == 0)
-        //    {
-        //        if (nhanVienId != null)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        if (nhanVienId != null)
-        //        {
-        //            if (nhanVienId == id)
-        //            {
-        //                return true;
-        //            }
-        //            else
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //}
     }
 }

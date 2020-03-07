@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Configuration;
 using Assignment01.Models;
 using System.Data.SqlClient;
-using Microsoft.AspNetCore.Http;
 
 namespace Assignment01.Helpers
 {

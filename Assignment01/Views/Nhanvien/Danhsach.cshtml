@@ -43,8 +43,8 @@
                                             <td>@nv.Tencv</td>
                                             <td>
                                                 <a class="btn btn-success" href="/Nhanvien/Chitiet/@nv.Id">Xem chi tiết</a>
-                                                <a class="btn btn-info" href="#">Sửa</a>
-                                                <a class="btn btn-danger" href="#">Xóa</a>
+                                                <a class="btn btn-info" href="/Nhanvien/Sua/@nv.Id">Sửa</a>
+                                                <a class="btn btn-danger" href="/Nhanvien/Xoa/@nv.Id">Xóa</a>
                                             </td>
                                         </tr>
                                     }
@@ -66,9 +66,12 @@
 @section Scripts{
     <script>
         $(document).ready( function () {
-            $('#table_id').DataTable();
+            $('#table_id').DataTable({
+                  "language": {
+                    "zeroRecords": "Không tìm được thông tin liên quan."
+                  }
+            });
         });
-
     </script>
 
 }

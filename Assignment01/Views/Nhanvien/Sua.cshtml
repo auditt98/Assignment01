@@ -1,0 +1,244 @@
+﻿
+@{
+    var thongTinNhanVien = ViewData["thongTinNhanVien"] as NhanVien;
+    var thongTinNhanVienChiTiet = ViewData["thongTinNhanVienChiTiet"] as NhanVien;
+    var danhMucTinhThanh = ViewData["DanhMucTinhThanh"] as List<TinhThanh>;
+    var danhMucPhongBan = ViewData["DanhMucPhongBan"] as List<PhongBan>;
+    var danhMucChucVu = ViewData["DanhMucChucVu"] as List<ChucVu>;
+
+    ViewData["Title"] = "Thêm nhân viên";
+
+}
+
+@{
+    Html.RenderPartial("Nav");
+}
+
+
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Thêm nhân viên</h1>
+        </div>
+    </div>
+    <form class="form-horizontal" method="post" action="/Nhanvien/Sua/@thongTinNhanVienChiTiet.Id">
+        @*Name*@
+        <div class="form-group">
+            <label for="inputN" class="col-sm-2 control-label">Họ tên <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <input type="text" name="inputName" value="@thongTinNhanVienChiTiet.Hoten" class="form-control" id="inputN" placeholder="Nhập tên nhân viên" pattern="^([a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+\s[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+)+$" title="Nhập đầy đủ họ tên" required>
+            </div>
+        </div>
+        @*Birthday*@
+        <div class="form-group">
+            <label for="birthday" class="col-sm-2 control-label">Ngày sinh:</label>
+            <div class="col-sm-6">
+                <input type="date" value="@Convert.ToDateTime(thongTinNhanVienChiTiet.Ns).ToString("yyyy-MM-dd")" class="form-control" id="birthday" name="inputBirthday" placeholder="Nhập ngày sinh" required>
+            </div>
+        </div>
+        @*gender*@
+        <div class="form-group">
+            <label for="gender" class="col-sm-2 control-label">Giới tính:</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="gender" name="inputGender" required>
+                    @if (thongTinNhanVienChiTiet.Gt == "Nam")
+                    {
+                        <option value="Nam" selected>Nam</option>
+                    }
+                    else
+                    {
+                        <option value="Nam">Nam</option>
+                    }
+                    @if (thongTinNhanVienChiTiet.Gt == "Nữ")
+                    {
+                        <option value="Nữ" selected>Nữ</option>
+                    }
+                    else
+                    {
+                        <option value="Nữ">Nữ</option>
+                    }
+
+                </select>
+            </div>
+        </div>
+        @*tinhthanh*@
+        <div class="form-group">
+            <label for="inputTt" class="col-sm-2 control-label">Quê quán <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <select class="form-control" name="inputTinhThanh" id="inputTt" required>
+                    @{
+                        foreach (var tt in danhMucTinhThanh)
+                        {
+                            if (tt.Idtinh == thongTinNhanVienChiTiet.Idtinh)
+                            {
+                                <option selected value="@tt.Idtinh">@tt.Tentinh</option>
+                            }
+                            else
+                            {
+                                <option value="@tt.Idtinh">@tt.Tentinh</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        @*email*@
+        <div class="form-group">
+            <label for="email" class="col-sm-2 control-label">Email <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <input type="email" name="inputEmail" value="@thongTinNhanVienChiTiet.Email" class="form-control" id="email" placeholder="Nhập địa chỉ email" required>
+            </div>
+        </div>
+        @*sdt*@
+        <div class="form-group">
+            <label for="phone" class="col-sm-2 control-label">Số điện thoại <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <input name="inputPhone" value="@thongTinNhanVienChiTiet.Sdt" id="phone" type="text" class="form-control" minlength="10" maxlength="13" pattern="^[0-9]*$" placeholder="Nhập số điện thoại" required title="Số điện thoại nhập không đúng. Độ dài số điện thoại phải từ 10-13 số, không có chữ cái hoặc ký tự đặc biệt.">
+            </div>
+        </div>
+        @*phongban*@
+        <div class="form-group">
+            <label for="inputPb" class="col-sm-2 control-label">Phòng ban <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                @if (thongTinNhanVienChiTiet.Tencv.Contains("Trưởng phòng"))
+                {
+                    <select class="form-control" name="inputPhongBan" id="inputPb" required>
+                        @{
+                            foreach (var pb in danhMucPhongBan)
+                            {
+                                if (pb.Idpban == thongTinNhanVienChiTiet.Idpban)
+                                {
+                                    <option selected value="@pb.Idpban">@pb.Tenpban</option>
+                                }
+                                else
+                                {
+                                    <option value="@pb.Idpban">@pb.Tenpban</option>
+                                }
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select class="form-control" name="inputPhongBan" id="inputPb" disabled required>
+                        @{
+                            foreach (var pb in danhMucPhongBan)
+                            {
+                                if (pb.Idpban == thongTinNhanVienChiTiet.Idpban)
+                                {
+                                    <option selected value="@pb.Idpban">@pb.Tenpban</option>
+                                }
+                                else
+                                {
+                                    <option value="@pb.Idpban">@pb.Tenpban</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <select class="form-control hidden" name="inputPhongBan">
+                        <option selected value="@thongTinNhanVienChiTiet.Idpban">@thongTinNhanVienChiTiet.Tenpban</option>
+                    </select>
+                }
+
+
+            </div>
+        </div>
+        @*chucvu*@
+        <div class="form-group">
+            <label for="inputChucvu" class="col-sm-2 control-label">Chức vụ <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                @if (thongTinNhanVienChiTiet.Tencv.Contains("Trưởng phòng"))
+                {
+                    <select class="form-control" name="inputChucVu" id="inputCv" required>
+                        @{
+                            foreach (var cv in danhMucChucVu)
+                            {
+                                if (cv.Idcv == thongTinNhanVienChiTiet.Idcv)
+                                {
+                                    <option selected value="@cv.Idcv">@cv.Tencv</option>
+                                }
+                                else
+                                {
+                                    <option value="@cv.Idcv">@cv.Tencv</option>
+                                }
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select class="form-control" name="inputChucVu" id="inputCv" disabled required>
+                        @{
+                            foreach (var cv in danhMucChucVu)
+                            {
+                                if (cv.Idcv == thongTinNhanVienChiTiet.Idcv)
+                                {
+                                    <option selected value="@cv.Idcv">@cv.Tencv</option>
+                                }
+                                else
+                                {
+                                    <option value="@cv.Idcv">@cv.Tencv</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <select class="form-control hidden" name="inputChucVu">
+                        <option selected value="@thongTinNhanVienChiTiet.Idcv">@thongTinNhanVienChiTiet.Tencv</option>
+                    </select>
+                }
+
+
+            </div>
+        </div>
+        @*ngayvaolam*@
+        <div class="form-group">
+            <label for="startDate" class="col-sm-2 control-label">Ngày vào làm <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <input type="date" class="form-control" value="@Convert.ToDateTime(thongTinNhanVienChiTiet.Ngayvaolam).ToString("yyyy-MM-dd")" id="startDate" name="inputStartDate" placeholder="Nhập ngày vào làm" required>
+            </div>
+        </div>
+        @*tendangnhap*@
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">Tên đăng nhập <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <input type="text" value="@thongTinNhanVienChiTiet.Username" class="form-control" id="username" name="inputUsername" placeholder="Nhập tên đăng nhập" required>
+            </div>
+        </div>
+        @*trangthai*@
+        <div class="form-group">
+            <label for="trangThai" class="col-sm-2 control-label">Trạng thái <span style="color:red">(*)</span>:</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="trangThai" name="inputStatus" required>
+                    @if (thongTinNhanVienChiTiet.Trangthai == "Đang làm")
+                    {
+                        <option value="Đang làm" selected>Đang làm</option>
+                    }
+                    else
+                    {
+                        <option value="Đang làm">Đang làm</option>
+                    }
+                    @if (thongTinNhanVienChiTiet.Gt == "Nghỉ việc")
+                    {
+                        <option value="Nghỉ việc" selected>Nghỉ việc</option>
+                    }
+                    else
+                    {
+                        <option value="Nghỉ việc">Nghỉ việc</option>
+                    }
+
+                </select>
+            </div>
+        </div>
+        @*submit*@
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-sm-8" style="text-align: center;">
+                <button class="btn btn-success" type="submit">Lưu</button>
+                <a class="btn btn-danger" href="/NhanVien/Danhsach">Hủy</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
